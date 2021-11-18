@@ -3,6 +3,7 @@ package com.android.bottomnavigationtransitionanimation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,14 +17,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.android.bottomnavigationtransitionanimation.ui.theme.BottomNavigationTransitionAnimationTheme
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.navigation
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalAnimationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -34,9 +36,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun MainScreen() {
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController() // todo 1 replace with rememberAnimatedNavController
     Scaffold(
         topBar = {
             TopAppBar(
@@ -47,12 +50,12 @@ fun MainScreen() {
             MyBottomBar(navController)
         }
     ) { padding ->
-        NavHost(
+        AnimatedNavHost( //todo 2 replace with AnimatedNavHost
             navController = navController,
             startDestination = Screen.Home.route,
             modifier = Modifier
                 .padding(padding)
-        ) {
+        ) { // todo 3 replace composable with com.google.accompanist.navigation.animation.composable
             composable(
                 Screen.Home.route
             ) {
@@ -71,7 +74,7 @@ fun MainScreen() {
                 NotificationScreen()
             }
 
-            navigation(
+            navigation( // todo 4 replace navigation with com.google.accompanist.navigation.animation.navigation
                 route = Screen.More.route,
                 startDestination = Screen.Profile.route
             ) {
